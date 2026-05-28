@@ -247,6 +247,24 @@
         .stagger > *:nth-child(6) { animation-delay: 0.65s; }
         .stagger > * { opacity: 0; }
 
+        /* Sequential number animations - items appear one by one with scale pop */
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.5) translateY(20px); }
+            60% { transform: scale(1.08) translateY(-3px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .slide.active .seq-numbers > * { animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .seq-numbers > * { opacity: 0; }
+        .seq-numbers > *:nth-child(1) { animation-delay: 0.2s; }
+        .seq-numbers > *:nth-child(2) { animation-delay: 0.5s; }
+        .seq-numbers > *:nth-child(3) { animation-delay: 0.8s; }
+        .seq-numbers > *:nth-child(4) { animation-delay: 1.1s; }
+        .seq-numbers > *:nth-child(5) { animation-delay: 1.4s; }
+        .seq-numbers > *:nth-child(6) { animation-delay: 1.7s; }
+        .seq-numbers > *:nth-child(7) { animation-delay: 2.0s; }
+        .seq-numbers > *:nth-child(8) { animation-delay: 2.3s; }
+
         @media (max-width: 768px) {
             .cards-3, .cards-2, .cards-2x2, .metrics, .habits, .principles, .agenda-grid, .two-panel {
                 grid-template-columns: 1fr;
@@ -279,7 +297,7 @@
             <div class="tag">AGENDA</div>
             <h2 class="title-lg">What we'll cover today.</h2>
             <p class="subtitle">Eight ideas — and the practices behind them — that shape how leaders show up in the room.</p>
-            <div class="agenda-grid stagger">
+            <div class="agenda-grid seq-numbers">
                 <div class="agenda-item"><span class="agenda-num">01</span><span class="agenda-dot"></span><span class="agenda-text">What is Executive Presence</span></div>
                 <div class="agenda-item"><span class="agenda-num">05</span><span class="agenda-dot"></span><span class="agenda-text">Preparation</span></div>
                 <div class="agenda-item"><span class="agenda-num">02</span><span class="agenda-dot"></span><span class="agenda-text">Communicating Under Pressure</span></div>
@@ -318,7 +336,7 @@
             <div class="tag">A WORKING DEFINITION</div>
             <p class="title-md" style="max-width:800px;">Executive presence is the ability to inspire confidence — in your team, your peers, your customers — through how you show up, speak, and listen.</p>
             <p class="subtitle" style="margin-top:0.5rem;">It is built — not born — across three pillars.</p>
-            <div class="cards cards-3 stagger">
+            <div class="cards cards-3 seq-numbers">
                 <div class="card">
                     <div class="bar" style="background:var(--accent1);"></div>
                     <div class="num accent-text">01</div>
@@ -353,7 +371,7 @@
         <div class="slide">
             <div class="tag">THE FOUR MOVES</div>
             <h2 class="title-md">How to lead a room when no one has the answer.</h2>
-            <div class="bar-list stagger">
+            <div class="bar-list seq-numbers">
                 <div class="bar-item"><div><span class="item-num">01</span><div class="item-title">ADMIT WHAT YOU DON'T KNOW</div><div class="item-desc">Misinformation thrives in a vacuum. Naming uncertainty up front protects trust. Promise an update — and deliver it.</div></div></div>
                 <div class="bar-item"><div><span class="item-num">02</span><div class="item-title">STAY A PROFESSIONAL</div><div class="item-desc">Bring clarity, analysis, and perspective. Give people a frame they can act on, not a performance.</div></div></div>
                 <div class="bar-item"><div><span class="item-num">03</span><div class="item-title">STAY A HUMAN</div><div class="item-desc">Acknowledge what people are feeling in the room. Empathy is not a soft skill — it's how you keep an audience with you.</div></div></div>
@@ -383,7 +401,7 @@
         <div class="slide">
             <div class="tag">PICK YOUR MODE</div>
             <h2 class="title-md">Different conversations need different tools.</h2>
-            <div class="cards cards-2x2 stagger">
+            <div class="cards cards-2x2 seq-numbers">
                 <div class="card"><div class="num accent3-text">#1</div><div class="card-title">ADVERSARIAL</div><div class="card-desc">Holding people accountable. Be assertive. Know your facts cold — and be ready to absorb the response.</div></div>
                 <div class="card"><div class="num accent2-text">#2</div><div class="card-title">EMPATHETIC</div><div class="card-desc">Connecting through a hard moment. Drop judgment. Open your tone. Telegraph: I'm here with you.</div></div>
                 <div class="card"><div class="num accent-text">#3</div><div class="card-title">INVESTIGATIVE</div><div class="card-desc">Surfacing what is underneath. Ask one informed question — then sit with the silence.</div></div>
@@ -404,7 +422,7 @@
         <div class="slide">
             <div class="tag">SIX METRICS THAT MATTER</div>
             <h2 class="title-md">What quietly decides every conversation.</h2>
-            <div class="metrics stagger">
+            <div class="metrics seq-numbers">
                 <div class="metric"><div class="big-num accent-text">7</div><div class="unit">SECONDS</div><div class="desc">to form a first impression — before you have said a single word.</div></div>
                 <div class="metric"><div class="big-num accent2-text">55</div><div class="unit">PERCENT</div><div class="desc">of what people receive is your body language and facial expression.</div></div>
                 <div class="metric"><div class="big-num accent3-text">38</div><div class="unit">PERCENT</div><div class="desc">of meaning travels through tone and voice — not the words themselves.</div></div>
@@ -538,7 +556,7 @@
         <div class="slide">
             <div class="tag">FOUR MOVES THAT WORK</div>
             <h2 class="title-md">How to make sure the conversation goes somewhere.</h2>
-            <div class="cards cards-2 stagger">
+            <div class="cards cards-2 seq-numbers">
                 <div class="card" style="display:flex;gap:1rem;align-items:flex-start;"><div class="num-circle">01</div><div><div class="card-title">SET GROUND RULES</div><div class="card-desc">Tell people the rules of engagement up front. "If something is off limits, just say so — I'll move on." People relax. The truth follows.</div></div></div>
                 <div class="card" style="display:flex;gap:1rem;align-items:flex-start;"><div class="num-circle">02</div><div><div class="card-title">IMPROVISE</div><div class="card-desc">Walk in with twenty questions. By the fifth, you'll know which ten matter. Drop the others and build the conversational version.</div></div></div>
                 <div class="card" style="display:flex;gap:1rem;align-items:flex-start;"><div class="num-circle">03</div><div><div class="card-title">EMBRACE THE QUIET</div><div class="card-desc">Silence is a tool. Pregnant pauses make people work. They fill the space with what they really think. Resist the urge to rescue.</div></div></div>
