@@ -1,835 +1,677 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Executive Presence — Rishan Barat</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;600;700;900&display=swap');
+
         :root {
-            --bg: #141414;
-            --bg-card: #1a1a2e;
-            --bg-modal: #0d0d1a;
+            --bg-dark: #0f0f1a;
+            --bg-dark2: #141428;
             --accent1: #6c5ce7;
             --accent2: #00d2d3;
             --accent3: #fd79a8;
             --gold: #fdcb6e;
-            --red: #e50914;
             --white: #ffffff;
-            --gray: #b3b3b3;
-            --dark-gray: #808080;
-            --card-border: rgba(255,255,255,0.08);
+            --light-gray: #b2bec3;
+            --medium-gray: #636e72;
+            --card-border: #2d2d4a;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         html, body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
             color: var(--white);
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
-
-        /* === HEADER === */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            padding: 1.2rem 4%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
-            transition: background 0.3s;
-        }
-        .header.scrolled { background: rgba(20,20,20,0.97); backdrop-filter: blur(20px); }
-        .logo { font-size: 1.4rem; font-weight: 900; letter-spacing: -0.5px; }
-        .logo span { color: var(--accent1); }
-        .header-author { color: var(--gray); font-size: 0.85rem; font-weight: 300; }
-
-        /* === HERO === */
-        .hero {
-            position: relative;
-            height: 85vh;
-            display: flex;
-            align-items: flex-end;
-            padding: 0 4% 6rem;
-            background: linear-gradient(135deg, #0d0d1a 0%, #1a0a2e 40%, #0a1628 100%);
             overflow: hidden;
+            height: 100%;
         }
-        .hero::before {
-            content: '';
+
+        .deck { width: 100vw; height: 100vh; position: relative; }
+
+        .slide {
             position: absolute;
             inset: 0;
-            background: radial-gradient(ellipse at 70% 30%, rgba(108,92,231,0.15) 0%, transparent 60%),
-                        radial-gradient(ellipse at 20% 80%, rgba(0,210,211,0.08) 0%, transparent 50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 6vh 6vw;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            overflow: hidden;
         }
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 40%;
-            background: linear-gradient(transparent, var(--bg));
-        }
-        .hero-content { position: relative; z-index: 2; max-width: 700px; }
-        .hero-tag {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            background: var(--accent1);
-            border-radius: 3px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            margin-bottom: 1.2rem;
-        }
-        .hero-title {
-            font-size: clamp(3rem, 7vw, 5.5rem);
-            font-weight: 900;
-            line-height: 1.05;
-            letter-spacing: -2px;
-            margin-bottom: 1rem;
-        }
-        .hero-subtitle {
-            font-size: 1.2rem;
-            color: var(--gray);
-            font-weight: 300;
-            line-height: 1.6;
-            max-width: 550px;
-            margin-bottom: 2rem;
-        }
-        .hero-meta {
-            font-size: 0.85rem;
-            color: var(--dark-gray);
-            font-weight: 400;
-        }
-        .hero-meta strong { color: var(--gray); }
 
-        /* === ANIMATED ORB === */
-        .orb {
+        .slide.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .slide.exit-up {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+
+        .glow {
             position: absolute;
             border-radius: 50%;
             filter: blur(80px);
-            opacity: 0.4;
-            animation: float 8s ease-in-out infinite;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-30px) scale(1.1); }
-        }
-
-        /* === BROWSE ROWS === */
-        .browse { padding: 0 4% 4rem; margin-top: -2rem; position: relative; z-index: 5; }
-        .row { margin-bottom: 3rem; }
-        .row-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .row-title .row-icon { font-size: 1.1rem; }
-
-        .cards-row {
-            display: flex;
-            gap: 1rem;
-            overflow-x: auto;
-            padding-bottom: 1rem;
-            scroll-snap-type: x mandatory;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        .cards-row::-webkit-scrollbar { display: none; }
-
-        /* === TOPIC CARD === */
-        .topic-card {
-            flex: 0 0 280px;
-            height: 160px;
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            scroll-snap-align: start;
-            transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s;
-            border: 1px solid var(--card-border);
-        }
-        .topic-card:hover {
-            transform: scale(1.08);
-            z-index: 10;
-            box-shadow: 0 16px 50px rgba(0,0,0,0.6);
-            border-color: rgba(255,255,255,0.2);
-        }
-        .topic-card .card-bg {
-            position: absolute;
-            inset: 0;
-            opacity: 0.9;
-        }
-        .topic-card .card-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 60%);
-            padding: 1.2rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-        }
-        .topic-card .card-num {
-            position: absolute;
-            top: 0.8rem;
-            right: 1rem;
-            font-size: 2.5rem;
-            font-weight: 900;
             opacity: 0.15;
-            color: var(--white);
-        }
-        .topic-card .card-label {
-            font-size: 0.95rem;
-            font-weight: 600;
-            line-height: 1.3;
-        }
-        .topic-card .card-sub {
-            font-size: 0.75rem;
-            color: var(--gray);
-            margin-top: 0.3rem;
-            font-weight: 300;
-        }
-        .topic-card .lock-icon {
-            position: absolute;
-            top: 0.8rem;
-            left: 1rem;
-            font-size: 1rem;
-            opacity: 0.7;
-        }
-
-        /* === EXPANDED MODAL === */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(8px);
-            z-index: 200;
-            opacity: 0;
             pointer-events: none;
-            transition: opacity 0.4s;
-            overflow-y: auto;
+            animation: pulse 8s ease-in-out infinite alternate;
         }
-        .modal-overlay.active { opacity: 1; pointer-events: all; }
 
-        .modal {
-            position: relative;
-            max-width: 900px;
-            margin: 4rem auto;
-            background: var(--bg-modal);
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.12; }
+            100% { transform: scale(1.15); opacity: 0.2; }
+        }
+
+        .tag { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em; color: var(--accent2); text-transform: uppercase; margin-bottom: 1rem; }
+        .chapter-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em; color: var(--accent2); }
+        .title-xl { font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 200; line-height: 1.1; margin: 0.5rem 0; }
+        .title-lg { font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 200; line-height: 1.15; }
+        .title-md { font-size: clamp(1.3rem, 2vw, 1.7rem); font-weight: 300; line-height: 1.3; }
+        .subtitle { font-size: clamp(0.85rem, 1.2vw, 1.1rem); color: var(--light-gray); line-height: 1.6; max-width: 700px; }
+        .accent-text { color: var(--accent1); }
+        .accent2-text { color: var(--accent2); }
+        .accent3-text { color: var(--accent3); }
+        .gold-text { color: var(--gold); }
+
+        .accent-line { width: 120px; height: 3px; margin: 1.2rem 0; border-radius: 2px; }
+        .accent-line.purple { background: var(--accent1); }
+        .accent-line.cyan { background: var(--accent2); }
+        .accent-line.pink { background: var(--accent3); }
+        .accent-line.gold { background: var(--gold); }
+
+        .author { font-size: 0.75rem; color: var(--medium-gray); margin-top: 2rem; }
+
+        .cards { display: grid; gap: 1.5rem; margin-top: 1.5rem; }
+        .cards-3 { grid-template-columns: repeat(3, 1fr); }
+        .cards-2 { grid-template-columns: repeat(2, 1fr); }
+        .cards-2x2 { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); }
+
+        .card {
+            background: var(--bg-dark2);
+            border: 1px solid var(--card-border);
             border-radius: 12px;
-            overflow: hidden;
-            transform: translateY(40px) scale(0.95);
-            transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
-            border: 1px solid rgba(255,255,255,0.06);
-        }
-        .modal-overlay.active .modal { transform: translateY(0) scale(1); }
-
-        .modal-hero {
-            position: relative;
-            padding: 3rem 2.5rem 2rem;
-            min-height: 180px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-        }
-        .modal-hero::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 60%;
-            background: linear-gradient(transparent, var(--bg-modal));
-        }
-        .modal-hero-content { position: relative; z-index: 2; }
-        .modal-chapter {
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--accent2);
-            margin-bottom: 0.5rem;
-        }
-        .modal-title {
-            font-size: 2rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-            line-height: 1.2;
-        }
-        .modal-subtitle {
-            font-size: 0.95rem;
-            color: var(--gray);
-            margin-top: 0.5rem;
-            font-weight: 300;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.1);
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-        }
-        .modal-close:hover { background: rgba(255,255,255,0.2); }
-
-        .modal-body { padding: 0 2.5rem 2.5rem; }
-
-        /* Modal content elements */
-        .m-section { margin-bottom: 2rem; }
-        .m-section-title {
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: var(--dark-gray);
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-        }
-        .m-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 0.8rem;
-        }
-        .m-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            padding: 1.2rem;
-            transition: border-color 0.2s, transform 0.2s;
-        }
-        .m-card:hover { border-color: rgba(255,255,255,0.15); transform: translateY(-2px); }
-        .m-card-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
-        .m-card-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; letter-spacing: 0.5px; }
-        .m-card-desc { font-size: 0.8rem; color: var(--gray); line-height: 1.5; font-weight: 300; }
-
-        .m-stat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 0.8rem;
-        }
-        .m-stat {
-            text-align: center;
-            padding: 1.5rem 1rem;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-        }
-        .m-stat-num { font-size: 2.5rem; font-weight: 900; line-height: 1; }
-        .m-stat-label { font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase; color: var(--dark-gray); margin-top: 0.3rem; }
-        .m-stat-desc { font-size: 0.75rem; color: var(--gray); margin-top: 0.5rem; line-height: 1.4; }
-
-        .m-list { list-style: none; }
-        .m-list li {
-            padding: 1rem 1.2rem;
-            border-left: 3px solid var(--accent2);
-            background: rgba(0,210,211,0.03);
-            margin-bottom: 0.6rem;
-            border-radius: 0 6px 6px 0;
-        }
-        .m-list li .li-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.3rem; }
-        .m-list li .li-desc { font-size: 0.8rem; color: var(--gray); line-height: 1.5; }
-
-        .m-quote {
-            font-size: 1.3rem;
-            font-weight: 300;
-            line-height: 1.6;
-            color: var(--gray);
-            border-left: 3px solid var(--accent1);
-            padding-left: 1.5rem;
-            margin: 1.5rem 0;
-            font-style: italic;
-        }
-
-        .m-video {
-            width: 100%;
-            border-radius: 8px;
-            border: 1px solid var(--card-border);
-            margin-top: 1rem;
-        }
-
-        .m-two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-        .m-col-box {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
             padding: 1.5rem;
+            transition: transform 0.3s, border-color 0.3s;
         }
-        .m-col-title { font-size: 0.8rem; font-weight: 700; color: var(--accent2); margin-bottom: 0.8rem; letter-spacing: 0.5px; }
-        .m-col-text { font-size: 0.85rem; color: var(--gray); line-height: 1.6; }
-        .m-col-text strong { color: var(--white); }
-        .m-col-highlight { color: var(--gold); font-weight: 600; margin-top: 0.8rem; display: block; }
+        .card:hover { transform: translateY(-4px); border-color: var(--accent1); }
 
-        .m-circles {
-            display: flex;
-            justify-content: center;
-            gap: 2.5rem;
-            margin: 1.5rem 0;
-        }
-        .m-circle-item { text-align: center; }
-        .m-circle {
-            width: 100px;
-            height: 100px;
+        .card .num { font-size: 1.8rem; font-weight: 900; margin-bottom: 0.5rem; }
+        .card .card-title { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.08em; margin-bottom: 0.7rem; }
+        .card .card-desc { font-size: 0.8rem; color: var(--light-gray); line-height: 1.6; }
+        .card .bar { width: 50px; height: 3px; border-radius: 2px; margin-bottom: 1rem; }
+
+        .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 1.5rem; }
+        .metric .big-num { font-size: clamp(2.5rem, 4vw, 3.5rem); font-weight: 900; line-height: 1; }
+        .metric .unit { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; margin: 0.3rem 0; }
+        .metric .desc { font-size: 0.78rem; color: var(--light-gray); line-height: 1.5; }
+
+        .quote-mark { font-size: 8rem; font-family: Georgia, serif; color: var(--accent1); line-height: 0.8; opacity: 0.6; }
+        .quote-text { font-size: clamp(1.2rem, 2.2vw, 1.8rem); font-weight: 200; line-height: 1.5; margin: 1rem 0 2rem 0.5rem; max-width: 700px; }
+        .quote-attr { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; color: var(--medium-gray); }
+
+        .bar-list { margin-top: 1.5rem; }
+        .bar-item { display: flex; gap: 1rem; margin-bottom: 1.5rem; padding-left: 1rem; border-left: 3px solid var(--accent1); }
+        .bar-item.cyan { border-color: var(--accent2); }
+        .bar-item.gold { border-color: var(--gold); }
+        .bar-item .item-num { font-size: 1.2rem; font-weight: 900; color: var(--accent1); min-width: 2rem; }
+        .bar-item .item-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .bar-item .item-desc { font-size: 0.78rem; color: var(--light-gray); line-height: 1.5; }
+
+        .circles { display: flex; justify-content: center; gap: 3rem; margin-top: 2rem; }
+        .circle-item { text-align: center; }
+        .circle {
+            width: clamp(100px, 12vw, 160px);
+            height: clamp(100px, 12vw, 160px);
             border-radius: 50%;
+            background: var(--bg-dark2);
             border: 3px solid;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin-bottom: 0.5rem;
+            margin: 0 auto 0.8rem;
         }
-        .m-circle .pct { font-size: 1.5rem; font-weight: 900; }
-        .m-circle .lbl { font-size: 0.55rem; letter-spacing: 1px; text-transform: uppercase; color: var(--gray); }
-        .m-circle-desc { font-size: 0.75rem; color: var(--gray); }
+        .circle .pct { font-size: clamp(1.5rem, 2.5vw, 2.2rem); font-weight: 900; }
+        .circle .label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; margin-top: 0.2rem; }
+        .circle-desc { font-size: 0.7rem; color: var(--light-gray); }
 
-        /* === RESPONSIVE === */
+        .habits { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 1.5rem; }
+        .habit { display: flex; gap: 1rem; align-items: flex-start; }
+        .habit-dot { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; margin-top: 2px; }
+        .habit-title { font-size: 0.82rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .habit-desc { font-size: 0.78rem; color: var(--light-gray); line-height: 1.5; }
+
+        .principles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem 3rem; margin-top: 1.5rem; }
+        .principle { display: flex; gap: 0.8rem; align-items: flex-start; }
+        .principle-sq { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; margin-top: 3px; }
+        .principle-title { font-size: 0.8rem; font-weight: 700; margin-bottom: 0.2rem; }
+        .principle-desc { font-size: 0.78rem; color: var(--light-gray); line-height: 1.5; }
+
+        .num-circle {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: var(--accent1); display: flex; align-items: center; justify-content: center;
+            font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+        }
+
+        .agenda-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem 3rem; margin-top: 1.5rem; }
+        .agenda-item { display: flex; align-items: center; gap: 0.8rem; }
+        .agenda-num { font-size: 1.3rem; font-weight: 900; color: var(--accent1); min-width: 2rem; }
+        .agenda-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); }
+        .agenda-text { font-size: 0.95rem; }
+
+        /* Two-panel layout for deeper content slides */
+        .two-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 1.5rem; align-items: start; }
+        .panel-left { }
+        .panel-right { }
+        .insight-box {
+            background: var(--bg-dark2);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.8rem;
+            border-left: 4px solid var(--accent1);
+        }
+        .insight-box.gold-border { border-left-color: var(--gold); }
+        .insight-box .insight-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.8rem; letter-spacing: 0.05em; }
+        .insight-box .insight-text { font-size: 0.8rem; color: var(--light-gray); line-height: 1.7; }
+        .key-point { display: flex; align-items: flex-start; gap: 0.7rem; margin-top: 1rem; }
+        .key-point-icon { width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; }
+        .key-point-text { font-size: 0.78rem; color: var(--light-gray); line-height: 1.5; }
+
+        .nav {
+            position: fixed;
+            bottom: 2rem;
+            right: 3rem;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 100;
+        }
+        .nav button {
+            width: 40px; height: 40px; border-radius: 50%;
+            border: 1px solid var(--card-border);
+            background: var(--bg-dark2);
+            color: var(--white);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .nav button:hover { border-color: var(--accent1); background: var(--accent1); }
+
+        .progress {
+            position: fixed;
+            top: 0; left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent1), var(--accent2));
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 2.2rem;
+            left: 3rem;
+            font-size: 0.7rem;
+            color: var(--medium-gray);
+            z-index: 100;
+        }
+
+        .slide.active .animate-in { animation: fadeInUp 0.6s ease forwards; }
+        .slide.active .animate-in:nth-child(1) { animation-delay: 0.1s; }
+        .slide.active .animate-in:nth-child(2) { animation-delay: 0.2s; }
+        .slide.active .animate-in:nth-child(3) { animation-delay: 0.3s; }
+        .slide.active .animate-in:nth-child(4) { animation-delay: 0.4s; }
+        .slide.active .animate-in:nth-child(5) { animation-delay: 0.5s; }
+        .slide.active .animate-in:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-in { opacity: 0; }
+        .slide.active .stagger > * { animation: fadeInUp 0.5s ease forwards; }
+        .stagger > *:nth-child(1) { animation-delay: 0.15s; }
+        .stagger > *:nth-child(2) { animation-delay: 0.25s; }
+        .stagger > *:nth-child(3) { animation-delay: 0.35s; }
+        .stagger > *:nth-child(4) { animation-delay: 0.45s; }
+        .stagger > *:nth-child(5) { animation-delay: 0.55s; }
+        .stagger > *:nth-child(6) { animation-delay: 0.65s; }
+        .stagger > * { opacity: 0; }
+
         @media (max-width: 768px) {
-            .hero { height: 70vh; }
-            .hero-title { font-size: 2.5rem; }
-            .topic-card { flex: 0 0 220px; height: 130px; }
-            .modal { margin: 2rem 1rem; }
-            .modal-body { padding: 0 1.5rem 1.5rem; }
-            .m-two-col { grid-template-columns: 1fr; }
-            .m-circles { flex-wrap: wrap; gap: 1.5rem; }
+            .cards-3, .cards-2, .cards-2x2, .metrics, .habits, .principles, .agenda-grid, .two-panel {
+                grid-template-columns: 1fr;
+            }
+            .circles { flex-direction: column; align-items: center; gap: 1.5rem; }
+            .slide { padding: 4vh 5vw; }
         }
-
-        /* === UNLOCK ANIMATION === */
-        @keyframes unlockPulse {
-            0% { box-shadow: 0 0 0 0 rgba(108,92,231,0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(108,92,231,0); }
-            100% { box-shadow: 0 0 0 0 rgba(108,92,231,0); }
-        }
-        .topic-card:active { animation: unlockPulse 0.6s; }
     </style>
 </head>
 <body>
-    <!-- HEADER -->
-    <div class="header" id="header">
-        <div class="logo"><span>EP</span> | Executive Presence</div>
-        <div class="header-author">Rishan Barat &bull; Sr. Director, Digital Sales</div>
-    </div>
+    <div class="progress" id="progress"></div>
+    <div class="slide-counter" id="counter">1 / 28</div>
 
-    <!-- HERO -->
-    <section class="hero">
-        <div class="orb" style="width:500px;height:500px;background:var(--accent1);top:10%;right:10%;"></div>
-        <div class="orb" style="width:350px;height:350px;background:var(--accent2);bottom:20%;left:5%;animation-delay:3s;"></div>
-        <div class="orb" style="width:250px;height:250px;background:var(--accent3);top:50%;right:40%;animation-delay:5s;"></div>
-        <div class="hero-content">
-            <div class="hero-tag">LEADERSHIP SERIES 2026</div>
-            <h1 class="hero-title">PRESENCE.</h1>
-            <p class="hero-subtitle">Communicating with purpose & intention. Nine chapters on how leaders show up, speak, listen, and lead the room.</p>
-            <p class="hero-meta"><strong>9 Chapters</strong> &nbsp;&bull;&nbsp; Interactive &nbsp;&bull;&nbsp; Click any topic to unlock</p>
+    <div class="deck">
+        <!-- SLIDE 1: TITLE -->
+        <div class="slide active">
+            <div class="glow" style="width:500px;height:500px;background:var(--accent1);top:-100px;left:-100px;"></div>
+            <div class="glow" style="width:350px;height:350px;background:var(--accent2);bottom:-50px;right:100px;animation-delay:3s;"></div>
+            <div class="tag animate-in">KEYNOTE &bull; INDUSTRY ATU</div>
+            <h1 class="title-xl animate-in">EXECUTIVE</h1>
+            <h1 class="title-xl accent-text animate-in">PRESENCE.</h1>
+            <div class="accent-line cyan animate-in"></div>
+            <p class="title-md animate-in" style="color:var(--light-gray);font-weight:200;">Communicating with purpose & intention.</p>
+            <p class="author animate-in">Rishan Barat &nbsp;|&nbsp; Sr. Director, Digital Sales &nbsp;|&nbsp; 2026</p>
         </div>
-    </section>
 
-    <!-- BROWSE -->
-    <section class="browse">
-        <!-- ROW 1: FOUNDATIONS -->
-        <div class="row">
-            <div class="row-title"><span class="row-icon">🔥</span> Foundations</div>
-            <div class="cards-row">
-                <div class="topic-card" onclick="openModal('opening')" style="background:linear-gradient(135deg, #1a0a3e 0%, #2d1b69 100%);">
-                    <div class="card-overlay">
-                        <div class="card-num">01</div>
-                        <div class="lock-icon">🔓</div>
-                        <div class="card-label">The Opening</div>
-                        <div class="card-sub">How you open is everything</div>
+        <!-- SLIDE 2: AGENDA -->
+        <div class="slide">
+            <div class="glow" style="width:400px;height:400px;background:var(--accent1);top:-150px;right:-100px;"></div>
+            <div class="tag">AGENDA</div>
+            <h2 class="title-lg">What we'll cover today.</h2>
+            <p class="subtitle">Eight ideas — and the practices behind them — that shape how leaders show up in the room.</p>
+            <div class="agenda-grid stagger">
+                <div class="agenda-item"><span class="agenda-num">01</span><span class="agenda-dot"></span><span class="agenda-text">The Opening</span></div>
+                <div class="agenda-item"><span class="agenda-num">05</span><span class="agenda-dot"></span><span class="agenda-text">Preparation</span></div>
+                <div class="agenda-item"><span class="agenda-num">02</span><span class="agenda-dot"></span><span class="agenda-text">Communicating Under Pressure</span></div>
+                <div class="agenda-item"><span class="agenda-num">06</span><span class="agenda-dot"></span><span class="agenda-text">Communicating & Listening</span></div>
+                <div class="agenda-item"><span class="agenda-num">03</span><span class="agenda-dot"></span><span class="agenda-text">Four Types of Conversations</span></div>
+                <div class="agenda-item"><span class="agenda-num">07</span><span class="agenda-dot"></span><span class="agenda-text">In the Room</span></div>
+                <div class="agenda-item"><span class="agenda-num">04</span><span class="agenda-dot"></span><span class="agenda-text">By the Numbers</span></div>
+                <div class="agenda-item"><span class="agenda-num">08</span><span class="agenda-dot"></span><span class="agenda-text">Closing Wisdom</span></div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: CHAPTER 01 -->
+        <div class="slide">
+            <div class="glow" style="width:500px;height:500px;background:var(--accent1);top:50px;right:-50px;"></div>
+            <div class="glow" style="width:300px;height:300px;background:var(--accent3);bottom:50px;left:-80px;animation-delay:2s;"></div>
+            <div class="chapter-label animate-in">CHAPTER 01</div>
+            <div class="accent-line purple animate-in"></div>
+            <h2 class="title-xl animate-in">How do you<br>Open?</h2>
+            <p class="subtitle animate-in">The first goal.</p>
+        </div>
+
+        <!-- SLIDE 4: VIDEO - SN Presentation -->
+        <div class="slide">
+            <div class="glow" style="width:400px;height:400px;background:var(--accent1);top:-50px;right:-50px;"></div>
+            <div class="tag animate-in">CHAPTER 01 — IN ACTION</div>
+            <div style="flex:1;display:flex;align-items:center;justify-content:center;margin-top:1rem;" class="animate-in">
+                <video controls playsinline style="max-width:85%;max-height:70vh;border-radius:12px;border:1px solid var(--card-border);box-shadow:0 20px 60px rgba(108,92,231,0.2);">
+                    <source src="sn-presentation.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: HOW YOU OPEN IS EVERYTHING -->
+        <div class="slide">
+            <div class="glow" style="width:400px;height:400px;background:var(--accent1);top:-100px;left:-50px;"></div>
+            <div class="tag">THE OPENING</div>
+            <h2 class="title-md">How you open is everything.</h2>
+            <div class="cards cards-2 stagger" style="margin-top:1.5rem;">
+                <div class="card" style="display:flex;gap:1rem;align-items:flex-start;"><div style="font-size:1.8rem;">📖</div><div><div class="card-title">#1 OPEN WITH A STORY</div><div class="card-desc">Capture the attention of the room.</div></div></div>
+                <div class="card" style="display:flex;gap:1rem;align-items:flex-start;"><div style="font-size:1.8rem;">😄</div><div><div class="card-title">#2 OPEN WITH HUMOR</div><div class="card-desc">Disarm the audience.</div></div></div>
+                <div class="card" style="display:flex;gap:1rem;align-items:flex-start;"><div style="font-size:1.8rem;">❓</div><div><div class="card-title">#3 OPEN WITH A QUESTION</div><div class="card-desc">Project confidence and command.</div></div></div>
+                <div class="card" style="display:flex;gap:1rem;align-items:flex-start;"><div style="font-size:1.8rem;">📊</div><div><div class="card-title">#4 OPEN WITH STATISTICS</div><div class="card-desc">Build credibility and interest.</div></div></div>
+                <div class="card" style="display:flex;gap:1rem;align-items:flex-start;"><div style="font-size:1.8rem;">💎</div><div><div class="card-title">#5 OPEN WITH VULNERABILITY</div><div class="card-desc">Earn trust.</div></div></div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: CHAPTER 02 -->
+        <div class="slide">
+            <div class="glow" style="width:500px;height:500px;background:var(--accent2);top:80px;right:0;"></div>
+            <div class="chapter-label animate-in">CHAPTER 02</div>
+            <div class="accent-line cyan animate-in"></div>
+            <h2 class="title-xl animate-in">Communicating<br>under<br>pressure.</h2>
+            <p class="subtitle animate-in">When the situation is uncertain — lead with clarity, accuracy, and emotional openness.</p>
+        </div>
+
+        <!-- SLIDE 6: FOUR MOVES -->
+        <div class="slide">
+            <div class="tag">THE FOUR MOVES</div>
+            <h2 class="title-md">How to lead a room when no one has the answer.</h2>
+            <div class="bar-list stagger">
+                <div class="bar-item"><div><span class="item-num">01</span><div class="item-title">ADMIT WHAT YOU DON'T KNOW</div><div class="item-desc">Name uncertainty up front. Promise an update — and deliver it.</div></div></div>
+                <div class="bar-item"><div><span class="item-num">02</span><div class="item-title">STAY A PROFESSIONAL</div><div class="item-desc">Give people a frame they can act on, not a performance.</div></div></div>
+                <div class="bar-item"><div><span class="item-num">03</span><div class="item-title">STAY A HUMAN</div><div class="item-desc">Acknowledge what people feel. Empathy keeps an audience with you.</div></div></div>
+                <div class="bar-item"><div><span class="item-num">04</span><div class="item-title">FOCUS ON KEY QUESTIONS</div><div class="item-desc">Answer the three biggest questions first. Everything else can wait.</div></div></div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: QUOTE -->
+        <div class="slide">
+            <div class="glow" style="width:500px;height:500px;background:var(--accent1);top:100px;left:200px;"></div>
+            <div style="display:flex;align-items:center;gap:3rem;">
+                <div>
+                    <div class="quote-mark animate-in">&ldquo;</div>
+                    <p class="quote-text animate-in">Stay calm.<br>Stay contained. Stay controlled.<br>But never lose your humanity —<br>getting that balance right is the job.</p>
+                    <div class="accent-line cyan animate-in"></div>
+                    <p class="quote-attr animate-in">A PRINCIPLE FOR HIGH-STAKES MOMENTS</p>
+                </div>
+                <div class="animate-in" style="flex-shrink:0;">
+                    <iframe width="280" height="500" src="https://www.youtube.com/embed/KGgzuphjFbk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius:12px;border:1px solid var(--card-border);box-shadow:0 20px 60px rgba(253,121,168,0.15);"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: CHAPTER 03 -->
+        <div class="slide">
+            <div class="glow" style="width:550px;height:550px;background:var(--accent3);top:0;right:-50px;"></div>
+            <div class="chapter-label animate-in">CHAPTER 03</div>
+            <div class="accent-line pink animate-in"></div>
+            <h2 class="title-xl animate-in"><span class="accent3-text" style="font-size:1.5em;">4</span> Types of<br>conversations.</h2>
+            <p class="subtitle animate-in">Reading the dynamic — and striking the right tone.</p>
+        </div>
+
+        <!-- SLIDE 9: CONVERSATION TYPES -->
+        <div class="slide">
+            <div class="tag">PICK YOUR MODE</div>
+            <h2 class="title-md">Different conversations need different tools.</h2>
+            <div class="cards cards-2x2 stagger">
+                <div class="card"><div class="num accent3-text">#1</div><div class="card-title">⚔️ ADVERSARIAL</div><div class="card-desc">Be assertive. Know your facts cold. Be ready to absorb the response.</div></div>
+                <div class="card"><div class="num accent2-text">#2</div><div class="card-title">💙 EMPATHETIC</div><div class="card-desc">Drop judgment. Open your tone. Telegraph: I'm here with you.</div></div>
+                <div class="card"><div class="num accent-text">#3</div><div class="card-title">🔍 INVESTIGATIVE</div><div class="card-desc">Ask one informed question — then sit with the silence.</div></div>
+                <div class="card"><div class="num gold-text">#4</div><div class="card-title">📖 INFORMATIVE</div><div class="card-desc">Be neutral. Be concise. A shorter question often elicits more.</div></div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: CHAPTER 04 -->
+        <div class="slide">
+            <div class="glow" style="width:500px;height:500px;background:var(--gold);top:50px;right:-20px;"></div>
+            <div class="chapter-label animate-in">CHAPTER 04</div>
+            <div class="accent-line gold animate-in"></div>
+            <h2 class="title-xl animate-in">By the<br>numbers.</h2>
+            <p class="subtitle animate-in">A rundown of time, attention, and what actually moves the needle.</p>
+        </div>
+
+        <!-- SLIDE 11: METRICS -->
+        <div class="slide">
+            <div class="tag">SIX METRICS THAT MATTER</div>
+            <h2 class="title-md">What quietly decides every conversation.</h2>
+            <div class="metrics stagger">
+                <div class="metric"><div class="big-num accent-text">7</div><div class="unit">SECONDS</div><div class="desc">to form a first impression — before you have said a single word.</div></div>
+                <div class="metric"><div class="big-num accent2-text">55</div><div class="unit">PERCENT</div><div class="desc">of what people receive is your body language and facial expression.</div></div>
+                <div class="metric"><div class="big-num accent3-text">38</div><div class="unit">PERCENT</div><div class="desc">of meaning travels through tone and voice — not the words themselves.</div></div>
+                <div class="metric"><div class="big-num gold-text">7</div><div class="unit">PERCENT</div><div class="desc">of communication is the actual words. Choose them well — but don't overweight them.</div></div>
+                <div class="metric"><div class="big-num accent-text">1</div><div class="unit">QUESTION</div><div class="desc">at a time. Stacking questions hands the other person their pick.</div></div>
+                <div class="metric"><div class="big-num accent2-text">2</div><div class="unit">EARS</div><div class="desc">to one mouth. Listen at twice the rate you speak — especially when you lead.</div></div>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: CHAPTER 05 -->
+        <div class="slide">
+            <div class="glow" style="width:450px;height:450px;background:var(--accent1);top:100px;right:50px;"></div>
+            <div class="chapter-label animate-in">CHAPTER 05</div>
+            <div class="accent-line purple animate-in"></div>
+            <h2 class="title-xl animate-in">Preparation<br>101.</h2>
+            <p class="subtitle animate-in">How seasoned leaders stay ahead — before they ever walk in the room.</p>
+        </div>
+
+        <!-- SLIDE 13: HABITS -->
+        <div class="slide">
+            <div class="tag">HABITS OF READINESS</div>
+            <h2 class="title-md">Four things to do before the room opens.</h2>
+            <div class="habits stagger">
+                <div class="habit"><div class="habit-dot" style="background:var(--accent2);"></div><div><div class="habit-title">📚 READ EVERYTHING</div><div class="habit-desc">Skim broadly. Read deeply on the topic. Then read the other side.</div></div></div>
+                <div class="habit"><div class="habit-dot" style="background:var(--accent1);"></div><div><div class="habit-title">🎯 DEFINE YOUR GOALS</div><div class="habit-desc">Name three outcomes you need by the end. Without goals, the conversation drifts.</div></div></div>
+                <div class="habit"><div class="habit-dot" style="background:var(--accent3);"></div><div><div class="habit-title">💬 START WITH THE BASICS</div><div class="habit-desc">Direct questions outperform clever ones. Let the question do the work.</div></div></div>
+                <div class="habit"><div class="habit-dot" style="background:var(--gold);"></div><div><div class="habit-title">🧠 IMAGINE THE DIALOGUE</div><div class="habit-desc">Walk it through in your head. Anticipate pushback. Sequence your asks.</div></div></div>
+            </div>
+        </div>
+
+        <!-- SLIDE 14: OBSERVER (NEW) -->
+        <div class="slide">
+            <div class="glow" style="width:450px;height:450px;background:var(--accent2);bottom:0;right:50px;animation-delay:2s;"></div>
+            <div class="tag">PREPARATION 101 — OBSERVER</div>
+            <h2 class="title-md">The greatest observer in the room is the most powerful person in the room.</h2>
+            <div class="two-panel stagger">
+                <div class="panel-left">
+                    <div class="insight-box">
+                        <div class="insight-title accent2-text">THE MASTERY OF READING PEOPLE</div>
+                        <div class="insight-text">To observe people — to truly read them — is a mastery. When anyone speaks, ask yourself: <em>but why?</em> Why do you think that? Because understanding someone's point of view, their opinion, their approach — that's where influence begins.</div>
+                        <div class="key-point" style="margin-top:1.2rem;">
+                            <div class="key-point-icon" style="background:var(--accent2);">&#10003;</div>
+                            <div class="key-point-text">Some people you can reason with. Explain: "I think the team would appreciate it if you respected that we don't have to agree — let's just move forward."</div>
+                        </div>
+                        <div class="key-point">
+                            <div class="key-point-icon" style="background:var(--accent3);">&#10005;</div>
+                            <div class="key-point-text">Others are brick walls. The definition of insanity is running into one over and over expecting a different result. Know the difference.</div>
+                        </div>
                     </div>
                 </div>
-                <div class="topic-card" onclick="openModal('pressure')" style="background:linear-gradient(135deg, #0a1e3e 0%, #0d3b5e 100%);">
-                    <div class="card-overlay">
-                        <div class="card-num">02</div>
-                        <div class="lock-icon">🔓</div>
-                        <div class="card-label">Communicating Under Pressure</div>
-                        <div class="card-sub">Lead when no one has the answer</div>
-                    </div>
-                </div>
-                <div class="topic-card" onclick="openModal('conversations')" style="background:linear-gradient(135deg, #2e0a1e 0%, #5e1a3e 100%);">
-                    <div class="card-overlay">
-                        <div class="card-num">03</div>
-                        <div class="lock-icon">🔓</div>
-                        <div class="card-label">4 Types of Conversations</div>
-                        <div class="card-sub">Read the dynamic, strike the tone</div>
-                    </div>
-                </div>
-                <div class="topic-card" onclick="openModal('numbers')" style="background:linear-gradient(135deg, #1e1a00 0%, #3e3500 100%);">
-                    <div class="card-overlay">
-                        <div class="card-num">04</div>
-                        <div class="lock-icon">🔓</div>
-                        <div class="card-label">By the Numbers</div>
-                        <div class="card-sub">What quietly decides everything</div>
+                <div class="panel-right">
+                    <div class="insight-box" style="border-left-color:var(--accent2);">
+                        <div class="insight-title">PROTECT YOUR VOICE</div>
+                        <div class="insight-text">Your voice is your greatest asset. You have to protect it. You also have to know <strong style="color:var(--white);">who is worthy of it.</strong></div>
+                        <div class="insight-text" style="margin-top:1rem;">Are you going to spend energy giving the best version of yourself to someone who doesn't appreciate it — or even want it?</div>
+                        <div class="insight-text" style="margin-top:1rem;color:var(--accent2);font-weight:600;">Scan the room. Know who you're willing to give that energy to — and who will actually receive it the way you intend.</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ROW 2: MASTERY -->
-        <div class="row">
-            <div class="row-title"><span class="row-icon">��</span> Mastery</div>
-            <div class="cards-row">
-                <div class="topic-card" onclick="openModal('preparation')" style="background:linear-gradient(135deg, #0a2e1e 0%, #1a5e3e 100%);">
-                    <div class="card-overlay">
-                        <div class="card-num">05</div>
-                        <div class="lock-icon">🔓</div>
-                        <div class="card-label">Preparation 101</div>
-                        <div class="card-sub">Observer mindset &amp; pace control</div>
+        <!-- SLIDE 15: SLOW DOWN (NEW) -->
+        <div class="slide">
+            <div class="glow" style="width:500px;height:500px;background:var(--gold);top:-50px;left:200px;"></div>
+            <div class="tag">PREPARATION 101 — SLOW DOWN</div>
+            <h2 class="title-md">If you really want to highlight a point — <span class="gold-text">slow down.</span></h2>
+            <div class="two-panel stagger">
+                <div class="panel-left">
+                    <div class="insight-box gold-border">
+                        <div class="insight-title gold-text">RATE OF SPEECH AS A TOOL</div>
+                        <div class="insight-text">Most of us are nervous. We have a default rate of speech. But changing your pace changes what your audience sees as important.</div>
+                        <div class="insight-text" style="margin-top:1rem;"><strong style="color:var(--medium-gray);">Without pacing:</strong><br><span style="font-style:italic;color:var(--medium-gray);">"Right now I'm going to go through the five core foundations and take you through one to three speech that I told you about pitching ability and then after that the importance of the other three—"</span></div>
+                        <div class="insight-text" style="margin-top:0.8rem;">Your audience has <strong style="color:var(--white);">no idea</strong> what is important and what is not.</div>
                     </div>
                 </div>
-                <div class="topic-card" onclick="openModal('listening')" style="background:linear-gradient(135deg, #001e2e 0%, #003e5e 100%);">
-                    <div class="card-overlay">
-                        <div class="card-num">06</div>
-                        <div class="lock-icon">🔓</div>
-                        <div class="card-label">Communicating & Listening</div>
-                        <div class="card-sub">Two halves of the same skill</div>
-                    </div>
-                </div>
-                <div class="topic-card" onclick="openModal('intheroom')" style="background:linear-gradient(135deg, #1e0a2e 0%, #3e1a5e 100%);">
-                    <div class="card-overlay">
-                        <div class="card-num">07</div>
-                        <div class="lock-icon">🔓</div>
-                        <div class="card-label">In the Room</div>
-                        <div class="card-sub">Four moves that work</div>
-                    </div>
-                </div>
-                <div class="topic-card" onclick="openModal('fluency')" style="background:linear-gradient(135deg, #0a2e2e 0%, #1a5e5e 100%);">
-                    <div class="card-overlay">
-                        <div class="card-num">08</div>
-                        <div class="lock-icon">🔓</div>
-                        <div class="card-label">Situational Fluency</div>
-                        <div class="card-sub">Adaptability in real time</div>
+                <div class="panel-right">
+                    <div class="insight-box gold-border">
+                        <div class="insight-title gold-text">CLARITY IS THE GOAL</div>
+                        <div class="insight-text"><strong style="color:var(--white);">With pacing:</strong><br><span style="font-style:italic;color:var(--white);">"I'm going to take you through... the core five... vocal foundations."</span></div>
+                        <div class="insight-text" style="margin-top:1rem;">Now your audience has a point of focus. The biggest thing people want from communication is <strong style="color:var(--gold);">clarity.</strong></div>
+                        <div class="insight-text" style="margin-top:1rem;">If you are going to be clear, the delivery needs to be clear — so the receiver gets what you intend.</div>
+                        <div class="insight-text" style="margin-top:1rem;color:var(--gold);font-weight:600;">It's not just the exchange of information. How you say something impacts how they receive it.</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ROW 3: CLOSING -->
-        <div class="row">
-            <div class="row-title"><span class="row-icon">✨</span> Wisdom</div>
-            <div class="cards-row">
-                <div class="topic-card" onclick="openModal('closing')" style="background:linear-gradient(135deg, #2e1e00 0%, #5e3e00 100%);flex:0 0 380px;">
-                    <div class="card-overlay">
-                        <div class="card-num">09</div>
-                        <div class="lock-icon">🔓</div>
-                        <div class="card-label">Words of Wisdom for the Road</div>
-                        <div class="card-sub">Six principles to carry into every conversation</div>
-                    </div>
-                </div>
+        <!-- SLIDE 16: CHAPTER 06 -->
+        <div class="slide">
+            <div class="glow" style="width:500px;height:500px;background:var(--accent2);top:80px;right:-30px;"></div>
+            <div class="chapter-label animate-in">CHAPTER 06</div>
+            <div class="accent-line cyan animate-in"></div>
+            <h2 class="title-xl animate-in">Communicating<br>& listening.</h2>
+            <p class="subtitle animate-in">Two halves of the same skill — practiced with purpose and intention.</p>
+        </div>
+
+        <!-- SLIDE 17: BODY LANGUAGE -->
+        <div class="slide">
+            <div class="tag">ON COMMUNICATING — BODY LANGUAGE</div>
+            <h2 class="title-md">What your physicality is saying — even when you're not.</h2>
+            <p class="subtitle">Mehrabian's research: when feelings and attitudes are at stake, your audience reads you across three channels — and words are the smallest piece.</p>
+            <div class="circles stagger">
+                <div class="circle-item"><div class="circle" style="border-color:var(--accent3);"><span class="pct accent3-text">7%</span><span class="label">WORDS</span></div><div class="circle-desc">What you actually say.</div></div>
+                <div class="circle-item"><div class="circle" style="border-color:var(--accent1);"><span class="pct accent-text">38%</span><span class="label">TONE & VOICE</span></div><div class="circle-desc">How you say it.</div></div>
+                <div class="circle-item"><div class="circle" style="border-color:var(--accent2);"><span class="pct accent2-text">55%</span><span class="label">BODY & FACE</span></div><div class="circle-desc">Posture, expression, eye contact.</div></div>
             </div>
         </div>
-    </section>
 
-    <!-- MODAL -->
-    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
-        <div class="modal" id="modalContent">
-            <button class="modal-close" onclick="closeModal(event, true)">&times;</button>
-            <div id="modalInner"></div>
+        <!-- SLIDE 18: LISTENING -->
+        <div class="slide">
+            <div class="tag">ON LISTENING</div>
+            <h2 class="title-md">Real listening is rare — and how people decide if you're with them.</h2>
+            <p class="subtitle">Active listening lights up the same brain regions as the speaker's. It changes how trusted you feel — without changing a single word you say.</p>
+            <div class="bar-list stagger">
+                <div class="bar-item cyan"><div><div class="item-title">🧘 CLEAR YOUR HEAD</div><div class="item-desc">If you're listening to confirm a bias, people see through it. Empty your agenda first.</div></div></div>
+                <div class="bar-item cyan"><div><div class="item-title">🔀 FLIP THE SCRIPT</div><div class="item-desc">Move from assessment questions to curiosity questions. One feels like a test. The other opens doors.</div></div></div>
+                <div class="bar-item cyan"><div><div class="item-title">🌊 GO DEEP</div><div class="item-desc">Open questions invite people to lead you to what matters most to them.</div></div></div>
+            </div>
         </div>
-    </div>
 
-    <script>
-    // ===================== MODAL CONTENT DATA =====================
-    const sections = {
-        opening: {
-            chapter: 'CHAPTER 01',
-            title: 'How Do You Open?',
-            subtitle: 'The first goal — how you open is everything.',
-            accent: 'var(--accent1)',
-            bg: 'linear-gradient(135deg, #1a0a3e 0%, #2d1b69 100%)',
-            body: `
-                <div class="m-section">
-                    <div class="m-section-title">WATCH — IN ACTION</div>
-                    <video class="m-video" controls playsinline>
-                        <source src="sn-presentation.mp4" type="video/mp4">
-                    </video>
+        <!-- SLIDE 19: CHAPTER 07 -->
+        <div class="slide">
+            <div class="glow" style="width:500px;height:500px;background:var(--accent1);top:50px;right:-20px;"></div>
+            <div class="chapter-label animate-in">CHAPTER 07</div>
+            <div class="accent-line purple animate-in"></div>
+            <h2 class="title-xl animate-in">In the<br>room.</h2>
+            <p class="subtitle animate-in">You've prepped. You've practiced. Now make the conversation revealing — and consequential.</p>
+        </div>
+
+        <!-- SLIDE 20: FOUR MOVES THAT WORK -->
+        <div class="slide">
+            <div class="tag">FOUR MOVES THAT WORK</div>
+            <h2 class="title-md">How to make sure the conversation goes somewhere.</h2>
+            <div class="cards cards-2 stagger">
+                <div class="card" style="display:flex;gap:1rem;align-items:flex-start;"><div class="num-circle">01</div><div><div class="card-title">🤝 SET GROUND RULES</div><div class="card-desc">"If something is off limits, just say so." People relax. The truth follows.</div></div></div>
+                <div class="card" style="display:flex;gap:1rem;align-items:flex-start;"><div class="num-circle">02</div><div><div class="card-title">🎭 IMPROVISE</div><div class="card-desc">Walk in with twenty questions. By the fifth, you'll know which ten matter.</div></div></div>
+                <div class="card" style="display:flex;gap:1rem;align-items:flex-start;"><div class="num-circle">03</div><div><div class="card-title">🤫 EMBRACE THE QUIET</div><div class="card-desc">Silence is a tool. People fill it with what they really think.</div></div></div>
+                <div class="card" style="display:flex;gap:1rem;align-items:flex-start;"><div class="num-circle">04</div><div><div class="card-title">❓ ASK THE SIMPLE QUESTION</div><div class="card-desc">A clean "Why?" at the right moment outperforms five layers of context.</div></div></div>
+            </div>
+        </div>
+
+        <!-- SLIDE: SITUATIONAL FLUENCY DIVIDER -->
+        <div class="slide">
+            <div class="glow" style="width:500px;height:500px;background:var(--accent2);top:50px;right:-30px;"></div>
+            <div class="glow" style="width:350px;height:350px;background:var(--accent1);bottom:80px;left:-50px;animation-delay:3s;"></div>
+            <div class="chapter-label animate-in">CHAPTER 08</div>
+            <div class="accent-line cyan animate-in"></div>
+            <h2 class="title-xl animate-in">Situational<br>fluency.</h2>
+            <p class="subtitle animate-in">aka Adaptability — the skill that makes every other skill land.</p>
+        </div>
+
+        <!-- SLIDE: SITUATIONAL FLUENCY CONTENT -->
+        <div class="slide">
+            <div class="tag">SITUATIONAL FLUENCY</div>
+            <div style="display:flex;align-items:flex-start;gap:2.5rem;">
+                <div style="flex:1;">
+                    <h2 class="title-md">Read the room — shift in real time.</h2>
+                    <div class="cards cards-2 stagger">
+                <div class="card" style="display:flex;gap:1rem;align-items:flex-start;"><div style="font-size:1.8rem;">🌡️</div><div><div class="card-title">READ THE TEMPERATURE</div><div class="card-desc">Diagnose the room's energy. Calibrate your tone, pace, and posture accordingly.</div></div></div>
+                <div class="card" style="display:flex;gap:1rem;align-items:flex-start;"><div style="font-size:1.8rem;">🪞</div><div><div class="card-title">MATCH THEN LEAD</div><div class="card-desc">Mirror their energy briefly — then shift the room toward the state you need.</div></div></div>
+                <div class="card" style="display:flex;gap:1rem;align-items:flex-start;"><div style="font-size:1.8rem;">⚡</div><div><div class="card-title">DROP THE SCRIPT</div><div class="card-desc">Rigid delivery kills connection. The best moments happen when you respond to what's actually happening.</div></div></div>
+                <div class="card" style="display:flex;gap:1rem;align-items:flex-start;"><div style="font-size:1.8rem;">🎛️</div><div><div class="card-title">FLEX YOUR REGISTER</div><div class="card-desc">Executive with the board. Direct with your team. Warm with a customer. Fluency, not fakeness.</div></div></div>
+            </div>
                 </div>
-                <div class="m-section">
-                    <div class="m-section-title">5 WAYS TO OPEN</div>
-                    <div class="m-cards">
-                        <div class="m-card"><div class="m-card-icon">📖</div><div class="m-card-title">#1 OPEN WITH A STORY</div><div class="m-card-desc">Capture the attention of the room.</div></div>
-                        <div class="m-card"><div class="m-card-icon">😄</div><div class="m-card-title">#2 OPEN WITH HUMOR</div><div class="m-card-desc">Disarm the audience.</div></div>
-                        <div class="m-card"><div class="m-card-icon">❓</div><div class="m-card-title">#3 OPEN WITH A QUESTION</div><div class="m-card-desc">Project confidence and command.</div></div>
-                        <div class="m-card"><div class="m-card-icon">📊</div><div class="m-card-title">#4 OPEN WITH STATISTICS</div><div class="m-card-desc">Build credibility and interest.</div></div>
-                        <div class="m-card"><div class="m-card-icon">💎</div><div class="m-card-title">#5 OPEN WITH VULNERABILITY</div><div class="m-card-desc">Earn trust.</div></div>
-                    </div>
-                </div>
-            `
-        },
-        pressure: {
-            chapter: 'CHAPTER 02',
-            title: 'Communicating Under Pressure',
-            subtitle: 'When the situation is uncertain — lead with clarity, accuracy, and emotional openness.',
-            accent: 'var(--accent2)',
-            bg: 'linear-gradient(135deg, #0a1e3e 0%, #0d3b5e 100%)',
-            body: `
-                <div class="m-section">
-                    <div class="m-section-title">THE FOUR MOVES</div>
-                    <ul class="m-list">
-                        <li><div class="li-title">01 &mdash; Admit What You Don't Know</div><div class="li-desc">Name uncertainty up front. Promise an update — and deliver it.</div></li>
-                        <li><div class="li-title">02 &mdash; Stay a Professional</div><div class="li-desc">Give people a frame they can act on, not a performance.</div></li>
-                        <li><div class="li-title">03 &mdash; Stay a Human</div><div class="li-desc">Acknowledge what people feel. Empathy keeps an audience with you.</div></li>
-                        <li><div class="li-title">04 &mdash; Focus on Key Questions</div><div class="li-desc">Answer the three biggest questions first. Everything else can wait.</div></li>
-                    </ul>
-                </div>
-                <div class="m-section">
-                    <p class="m-quote">Stay calm. Stay contained. Stay controlled. But never lose your humanity — getting that balance right is the job.</p>
-                </div>
-                <div class="m-section">
-                    <div class="m-section-title">WATCH</div>
-                    <iframe class="m-video" style="aspect-ratio:9/16;max-width:300px;" src="https://www.youtube.com/embed/KGgzuphjFbk" frameborder="0" allowfullscreen></iframe>
-                </div>
-            `
-        },
-        conversations: {
-            chapter: 'CHAPTER 03',
-            title: '4 Types of Conversations',
-            subtitle: 'Reading the dynamic — and striking the right tone.',
-            accent: 'var(--accent3)',
-            bg: 'linear-gradient(135deg, #2e0a1e 0%, #5e1a3e 100%)',
-            body: `
-                <div class="m-section">
-                    <div class="m-section-title">PICK YOUR MODE</div>
-                    <div class="m-cards" style="grid-template-columns: repeat(2, 1fr);">
-                        <div class="m-card"><div class="m-card-icon">⚔️</div><div class="m-card-title">#1 ADVERSARIAL</div><div class="m-card-desc">Be assertive. Know your facts cold. Be ready to absorb the response.</div></div>
-                        <div class="m-card"><div class="m-card-icon">💙</div><div class="m-card-title">#2 EMPATHETIC</div><div class="m-card-desc">Drop judgment. Open your tone. Telegraph: I'm here with you.</div></div>
-                        <div class="m-card"><div class="m-card-icon">🔍</div><div class="m-card-title">#3 INVESTIGATIVE</div><div class="m-card-desc">Ask one informed question — then sit with the silence.</div></div>
-                        <div class="m-card"><div class="m-card-icon">📖</div><div class="m-card-title">#4 INFORMATIVE</div><div class="m-card-desc">Be neutral. Be concise. A shorter question often elicits more.</div></div>
-                    </div>
-                </div>
-            `
-        },
-        numbers: {
-            chapter: 'CHAPTER 04',
-            title: 'By the Numbers',
-            subtitle: 'A rundown of time, attention, and what actually moves the needle.',
-            accent: 'var(--gold)',
-            bg: 'linear-gradient(135deg, #1e1a00 0%, #3e3500 100%)',
-            body: `
-                <div class="m-section">
-                    <div class="m-section-title">SIX METRICS THAT MATTER</div>
-                    <div class="m-stat-grid">
-                        <div class="m-stat"><div class="m-stat-num" style="color:var(--accent1);">7</div><div class="m-stat-label">SECONDS</div><div class="m-stat-desc">To form a first impression — before a single word.</div></div>
-                        <div class="m-stat"><div class="m-stat-num" style="color:var(--accent2);">55</div><div class="m-stat-label">PERCENT</div><div class="m-stat-desc">Received through body language & facial expression.</div></div>
-                        <div class="m-stat"><div class="m-stat-num" style="color:var(--accent3);">38</div><div class="m-stat-label">PERCENT</div><div class="m-stat-desc">Meaning travels through tone & voice.</div></div>
-                        <div class="m-stat"><div class="m-stat-num" style="color:var(--gold);">7</div><div class="m-stat-label">PERCENT</div><div class="m-stat-desc">Communication is the actual words.</div></div>
-                        <div class="m-stat"><div class="m-stat-num" style="color:var(--accent1);">1</div><div class="m-stat-label">QUESTION</div><div class="m-stat-desc">At a time. Don't stack.</div></div>
-                        <div class="m-stat"><div class="m-stat-num" style="color:var(--accent2);">2</div><div class="m-stat-label">EARS</div><div class="m-stat-desc">To one mouth. Listen at 2x the rate you speak.</div></div>
-                    </div>
-                </div>
-            `
-        },
-        preparation: {
-            chapter: 'CHAPTER 05',
-            title: 'Preparation 101',
-            subtitle: 'How seasoned leaders stay ahead — before they ever walk in the room.',
-            accent: 'var(--accent1)',
-            bg: 'linear-gradient(135deg, #0a2e1e 0%, #1a5e3e 100%)',
-            body: `
-                <div class="m-section">
-                    <div class="m-section-title">HABITS OF READINESS</div>
-                    <div class="m-cards">
-                        <div class="m-card"><div class="m-card-icon">📚</div><div class="m-card-title">READ EVERYTHING</div><div class="m-card-desc">Skim broadly. Read deeply on the topic. Then read the other side.</div></div>
-                        <div class="m-card"><div class="m-card-icon">🎯</div><div class="m-card-title">DEFINE YOUR GOALS</div><div class="m-card-desc">Name three outcomes you need. Without goals, the conversation drifts.</div></div>
-                        <div class="m-card"><div class="m-card-icon">💬</div><div class="m-card-title">START WITH THE BASICS</div><div class="m-card-desc">Direct questions outperform clever ones.</div></div>
-                        <div class="m-card"><div class="m-card-icon">🧠</div><div class="m-card-title">IMAGINE THE DIALOGUE</div><div class="m-card-desc">Walk it through. Anticipate pushback. Sequence your asks.</div></div>
-                    </div>
-                </div>
-                <div class="m-section">
-                    <div class="m-section-title">THE OBSERVER</div>
-                    <div class="m-two-col">
-                        <div class="m-col-box">
-                            <div class="m-col-title">READING PEOPLE IS MASTERY</div>
-                            <div class="m-col-text">The greatest observer in the room is the most powerful person in the room. When anyone speaks, ask: <strong>but why?</strong> Understanding their point of view is where influence begins.</div>
-                            <div class="m-col-text" style="margin-top:0.8rem;">Some people you can reason with. Others are brick walls — know the difference.</div>
-                        </div>
-                        <div class="m-col-box">
-                            <div class="m-col-title">PROTECT YOUR VOICE</div>
-                            <div class="m-col-text">Your voice is your greatest asset. Know <strong>who is worthy of it.</strong></div>
-                            <div class="m-col-text" style="margin-top:0.8rem;">Scan the room. Know who you're willing to give that energy to — and who will actually receive it.</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="m-section">
-                    <div class="m-section-title">SLOW DOWN</div>
-                    <div class="m-two-col">
-                        <div class="m-col-box">
-                            <div class="m-col-title" style="color:var(--gold);">RATE OF SPEECH AS A TOOL</div>
-                            <div class="m-col-text">Changing your pace changes what your audience sees as important. Without pacing, your audience has no idea what matters.</div>
-                        </div>
-                        <div class="m-col-box">
-                            <div class="m-col-title" style="color:var(--gold);">CLARITY IS THE GOAL</div>
-                            <div class="m-col-text">If you are going to be clear, the delivery needs to be clear — so the receiver gets what you intend.</div>
-                            <span class="m-col-highlight">How you say something impacts how they receive it.</span>
-                        </div>
-                    </div>
-                </div>
-            `
-        },
-        listening: {
-            chapter: 'CHAPTER 06',
-            title: 'Communicating & Listening',
-            subtitle: 'Two halves of the same skill — practiced with purpose and intention.',
-            accent: 'var(--accent2)',
-            bg: 'linear-gradient(135deg, #001e2e 0%, #003e5e 100%)',
-            body: `
-                <div class="m-section">
-                    <div class="m-section-title">BODY LANGUAGE — WHAT YOUR PHYSICALITY SAYS</div>
-                    <div class="m-circles">
-                        <div class="m-circle-item"><div class="m-circle" style="border-color:var(--accent3);"><span class="pct" style="color:var(--accent3);">7%</span><span class="lbl">WORDS</span></div><div class="m-circle-desc">What you say.</div></div>
-                        <div class="m-circle-item"><div class="m-circle" style="border-color:var(--accent1);"><span class="pct" style="color:var(--accent1);">38%</span><span class="lbl">TONE</span></div><div class="m-circle-desc">How you say it.</div></div>
-                        <div class="m-circle-item"><div class="m-circle" style="border-color:var(--accent2);"><span class="pct" style="color:var(--accent2);">55%</span><span class="lbl">BODY</span></div><div class="m-circle-desc">Posture & expression.</div></div>
-                    </div>
-                </div>
-                <div class="m-section">
-                    <div class="m-section-title">ON LISTENING</div>
-                    <ul class="m-list">
-                        <li><div class="li-title">🧘 Clear Your Head</div><div class="li-desc">If you're listening to confirm a bias, people see through it. Empty your agenda first.</div></li>
-                        <li><div class="li-title">🔀 Flip the Script</div><div class="li-desc">Move from assessment questions to curiosity questions. One feels like a test. The other opens doors.</div></li>
-                        <li><div class="li-title">🌊 Go Deep</div><div class="li-desc">Open questions invite people to lead you to what matters most to them.</div></li>
-                    </ul>
-                </div>
-            `
-        },
-        intheroom: {
-            chapter: 'CHAPTER 07',
-            title: 'In the Room',
-            subtitle: "You've prepped. You've practiced. Now make the conversation revealing — and consequential.",
-            accent: 'var(--accent1)',
-            bg: 'linear-gradient(135deg, #1e0a2e 0%, #3e1a5e 100%)',
-            body: `
-                <div class="m-section">
-                    <div class="m-section-title">FOUR MOVES THAT WORK</div>
-                    <div class="m-cards" style="grid-template-columns: repeat(2, 1fr);">
-                        <div class="m-card"><div class="m-card-icon">🤝</div><div class="m-card-title">SET GROUND RULES</div><div class="m-card-desc">"If something is off limits, just say so." People relax. The truth follows.</div></div>
-                        <div class="m-card"><div class="m-card-icon">🎭</div><div class="m-card-title">IMPROVISE</div><div class="m-card-desc">Walk in with twenty questions. By the fifth, you'll know which ten matter.</div></div>
-                        <div class="m-card"><div class="m-card-icon">🤫</div><div class="m-card-title">EMBRACE THE QUIET</div><div class="m-card-desc">Silence is a tool. People fill it with what they really think.</div></div>
-                        <div class="m-card"><div class="m-card-icon">❓</div><div class="m-card-title">ASK THE SIMPLE QUESTION</div><div class="m-card-desc">A clean "Why?" at the right moment outperforms five layers of context.</div></div>
-                    </div>
-                </div>
-            `
-        },
-        fluency: {
-            chapter: 'CHAPTER 08',
-            title: 'Situational Fluency',
-            subtitle: 'aka Adaptability — the skill that makes every other skill land.',
-            accent: 'var(--accent2)',
-            bg: 'linear-gradient(135deg, #0a2e2e 0%, #1a5e5e 100%)',
-            body: `
-                <div class="m-section">
-                    <div class="m-section-title">READ THE ROOM — SHIFT IN REAL TIME</div>
-                    <div class="m-cards" style="grid-template-columns: repeat(2, 1fr);">
-                        <div class="m-card"><div class="m-card-icon">🌡️</div><div class="m-card-title">READ THE TEMPERATURE</div><div class="m-card-desc">Diagnose the room's energy. Calibrate your tone, pace, and posture accordingly.</div></div>
-                        <div class="m-card"><div class="m-card-icon">🪞</div><div class="m-card-title">MATCH THEN LEAD</div><div class="m-card-desc">Mirror their energy briefly — then shift the room toward the state you need.</div></div>
-                        <div class="m-card"><div class="m-card-icon">⚡</div><div class="m-card-title">DROP THE SCRIPT</div><div class="m-card-desc">Rigid delivery kills connection. The best moments happen when you respond to what's actually happening.</div></div>
-                        <div class="m-card"><div class="m-card-icon">🎛️</div><div class="m-card-title">FLEX YOUR REGISTER</div><div class="m-card-desc">Executive with the board. Direct with your team. Warm with a customer.</div></div>
-                    </div>
-                </div>
-                <div class="m-section">
-                    <div class="m-section-title">THE ADAPTABILITY EDGE</div>
-                    <ul class="m-list">
-                        <li><div class="li-title">🎯 Context is Everything</div><div class="li-desc">A skeptic, an ally, and a decision-maker need three different approaches.</div></li>
-                        <li><div class="li-title">⏱️ Speed of Recalibration</div><div class="li-desc">The best leaders recalibrate in seconds, not minutes. That speed earns trust.</div></li>
-                        <li><div class="li-title">🔄 Comfort with Discomfort</div><div class="li-desc">You can't flex if you're clinging to how you thought it would go. The pivot is where credibility is built.</div></li>
-                    </ul>
-                </div>
-                <div class="m-section">
-                    <div class="m-section-title">WATCH</div>
-                    <video class="m-video" controls playsinline>
+                <div class="animate-in" style="flex-shrink:0;align-self:center;">
+                    <video width="340" height="240" controls playsinline style="border-radius:12px;border:1px solid var(--card-border);box-shadow:0 20px 60px rgba(0,210,211,0.15);">
                         <source src="adapt.mp4" type="video/mp4">
                     </video>
                 </div>
-            `
-        },
-        closing: {
-            chapter: 'CHAPTER 09',
-            title: 'Words of Wisdom for the Road',
-            subtitle: 'Six principles to carry into every important conversation.',
-            accent: 'var(--gold)',
-            bg: 'linear-gradient(135deg, #2e1e00 0%, #5e3e00 100%)',
-            body: `
-                <div class="m-section">
-                    <div class="m-section-title">WATCH</div>
-                    <video class="m-video" controls playsinline>
-                        <source src="rh-on-sales.mp4" type="video/mp4">
-                    </video>
-                </div>
-                <div class="m-section">
-                    <div class="m-section-title">SIX FINAL LESSONS</div>
-                    <div class="m-cards" style="grid-template-columns: repeat(2, 1fr);">
-                        <div class="m-card"><div class="m-card-icon">💎</div><div class="m-card-title">ON HONESTY</div><div class="m-card-desc">Lead with your weaknesses. People trust vulnerability before authority.</div></div>
-                        <div class="m-card"><div class="m-card-icon">⏸️</div><div class="m-card-title">ON SILENCE</div><div class="m-card-desc">Pauses carry more weight than words. Use them on purpose.</div></div>
-                        <div class="m-card"><div class="m-card-icon">🌊</div><div class="m-card-title">ON HARD NEWS</div><div class="m-card-desc">Stay calm. Stay contained. But stay human.</div></div>
-                        <div class="m-card"><div class="m-card-icon">🎯</div><div class="m-card-title">ON TOUGH QUESTIONS</div><div class="m-card-desc">Compare actions to commitments. Done with respect, it lands.</div></div>
-                        <div class="m-card"><div class="m-card-icon">⚖️</div><div class="m-card-title">ON OBJECTIVITY</div><div class="m-card-desc">Give people your analysis — not your conclusion. Let them get there.</div></div>
-                        <div class="m-card"><div class="m-card-icon">✨</div><div class="m-card-title">ON GREAT CONVERSATIONS</div><div class="m-card-desc">Time disappears. People finish each other's sentences. There is laughter.</div></div>
-                    </div>
-                </div>
-            `
-        }
-    };
-
-    // ===================== MODAL LOGIC =====================
-    const overlay = document.getElementById('modalOverlay');
-    const modalInner = document.getElementById('modalInner');
-
-    function openModal(key) {
-        const s = sections[key];
-        modalInner.innerHTML = `
-            <div class="modal-hero" style="background:${s.bg};">
-                <div class="modal-hero-content">
-                    <div class="modal-chapter" style="color:${s.accent};">${s.chapter}</div>
-                    <div class="modal-title">${s.title}</div>
-                    <div class="modal-subtitle">${s.subtitle}</div>
-                </div>
             </div>
-            <div class="modal-body">${s.body}</div>
-        `;
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
+        </div>
 
-    function closeModal(e, force) {
-        if (force || e.target === overlay) {
-            overlay.classList.remove('active');
-            document.body.style.overflow = '';
-            // Pause any playing videos
-            modalInner.querySelectorAll('video').forEach(v => v.pause());
+        <!-- SLIDE: SITUATIONAL FLUENCY - DEEPER -->
+        <div class="slide">
+            <div class="glow" style="width:400px;height:400px;background:var(--accent2);bottom:0;right:80px;"></div>
+            <div class="tag">THE ADAPTABILITY EDGE</div>
+            <h2 class="title-md">Why the most adaptable person wins.</h2>
+            <div class="bar-list stagger">
+                <div class="bar-item cyan"><div><div class="item-title">🎯 CONTEXT IS EVERYTHING</div><div class="item-desc">A skeptic, an ally, and a decision-maker need three different approaches. One size signals low awareness.</div></div></div>
+                <div class="bar-item cyan"><div><div class="item-title">⏱️ SPEED OF RECALIBRATION</div><div class="item-desc">Things go sideways. The best leaders recalibrate in seconds, not minutes. That speed earns trust.</div></div></div>
+                <div class="bar-item cyan"><div><div class="item-title">🔄 COMFORT WITH DISCOMFORT</div><div class="item-desc">You can't flex if you're clinging to how you thought it would go. The pivot is where credibility is built.</div></div></div>
+            </div>
+        </div>
+
+        <!-- SLIDE: CHAPTER 09 - CLOSING WISDOM -->
+        <div class="slide">
+            <div class="glow" style="width:550px;height:550px;background:var(--gold);top:50px;right:100px;"></div>
+            <div class="glow" style="width:300px;height:300px;background:var(--accent1);bottom:50px;left:-50px;animation-delay:4s;"></div>
+            <div class="chapter-label animate-in">CHAPTER 09</div>
+            <div class="accent-line gold animate-in"></div>
+            <h2 class="title-xl animate-in">WORDS OF<br>WISDOM<br>FOR THE ROAD.</h2>
+            <p class="subtitle animate-in">Six principles to carry into every important conversation.</p>
+        </div>
+
+        <!-- SLIDE 23: VIDEO - RH on Sales -->
+        <div class="slide">
+            <div class="glow" style="width:450px;height:450px;background:var(--gold);bottom:0;left:100px;"></div>
+            <div class="tag animate-in">CLOSING WISDOM — WATCH</div>
+            <div style="flex:1;display:flex;align-items:center;justify-content:center;margin-top:1rem;" class="animate-in">
+                <video controls playsinline style="max-width:85%;max-height:70vh;border-radius:12px;border:1px solid var(--card-border);box-shadow:0 20px 60px rgba(253,203,110,0.2);">
+                    <source src="rh-on-sales.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+
+        <!-- SLIDE 22: PRINCIPLES -->
+        <div class="slide">
+            <div class="tag">PRINCIPLES TO CARRY WITH YOU</div>
+            <h2 class="title-md">Six final lessons.</h2>
+            <div class="principles stagger">
+                <div class="principle"><div class="principle-sq" style="background:var(--accent1);"></div><div><div class="principle-title">💎 ON HONESTY</div><div class="principle-desc">Lead with your weaknesses. People trust vulnerability before authority.</div></div></div>
+                <div class="principle"><div class="principle-sq" style="background:var(--accent2);"></div><div><div class="principle-title">⏸️ ON SILENCE</div><div class="principle-desc">Pauses carry more weight than words. Use them on purpose.</div></div></div>
+                <div class="principle"><div class="principle-sq" style="background:var(--accent3);"></div><div><div class="principle-title">🌊 ON HARD NEWS</div><div class="principle-desc">Stay calm. Stay contained. But stay human.</div></div></div>
+                <div class="principle"><div class="principle-sq" style="background:var(--gold);"></div><div><div class="principle-title">🎯 ON TOUGH QUESTIONS</div><div class="principle-desc">Compare actions to commitments. Done with respect, it lands.</div></div></div>
+                <div class="principle"><div class="principle-sq" style="background:var(--accent1);"></div><div><div class="principle-title">⚖️ ON OBJECTIVITY</div><div class="principle-desc">Give people your analysis — not your conclusion. Let them get there.</div></div></div>
+                <div class="principle"><div class="principle-sq" style="background:var(--accent2);"></div><div><div class="principle-title">✨ ON GREAT CONVERSATIONS</div><div class="principle-desc">Time disappears. People finish each other's sentences. There is laughter.</div></div></div>
+            </div>
+        </div>
+
+        <!-- SLIDE 23: CLOSING -->
+        <div class="slide">
+            <div class="glow" style="width:600px;height:600px;background:var(--accent1);top:50px;left:200px;"></div>
+            <div class="glow" style="width:350px;height:350px;background:var(--accent2);bottom:0;right:100px;animation-delay:3s;"></div>
+            <div class="chapter-label animate-in">CLOSING</div>
+            <h2 class="title-xl animate-in">Bring<br>your whole<br>self.</h2>
+            <div class="accent-line purple animate-in"></div>
+            <p class="title-md animate-in" style="color:var(--light-gray);font-weight:200;margin-top:1rem;">Thank you.</p>
+        </div>
+    </div>
+
+    <div class="nav">
+        <button onclick="prevSlide()" aria-label="Previous">&#8592;</button>
+        <button onclick="nextSlide()" aria-label="Next">&#8594;</button>
+    </div>
+
+    <script>
+        let current = 0;
+        const slides = document.querySelectorAll('.slide');
+        const total = slides.length;
+        const progress = document.getElementById('progress');
+        const counter = document.getElementById('counter');
+
+        function showSlide(n) {
+            slides[current].classList.remove('active');
+            slides[current].classList.add('exit-up');
+            setTimeout(() => { slides[current].classList.remove('exit-up'); current = n; }, 50);
+
+            const next = ((n % total) + total) % total;
+            setTimeout(() => {
+                current = next;
+                slides[current].classList.add('active');
+                progress.style.width = ((current + 1) / total * 100) + '%';
+                counter.textContent = (current + 1) + ' / ' + total;
+            }, 100);
         }
-    }
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') { overlay.classList.remove('active'); document.body.style.overflow = ''; }
-    });
+        function nextSlide() { showSlide((current + 1) % total); }
+        function prevSlide() { showSlide((current - 1 + total) % total); }
 
-    // Header scroll effect
-    window.addEventListener('scroll', () => {
-        document.getElementById('header').classList.toggle('scrolled', window.scrollY > 50);
-    });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); nextSlide(); }
+            if (e.key === 'ArrowLeft' || e.key === 'Backspace') { e.preventDefault(); prevSlide(); }
+        });
+
+        let touchStartX = 0;
+        document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+        document.addEventListener('touchend', (e) => {
+            const diff = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); }
+        });
+
+        progress.style.width = (1 / total * 100) + '%';
     </script>
 </body>
 </html>
